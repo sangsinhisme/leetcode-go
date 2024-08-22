@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(strangePrinter("bcbdbebfbgbhbibjb"))
+	fmt.Println(findComplement(69))
 }

@@ -6,8 +6,13 @@ import (
 )
 
 func main() {
-	x := 12389 - 12321
-	y := 12389 - 12421
-	fmt.Println(x, y)
-	fmt.Println(nearestPalindromic("12389"))
+	root := &TreeNode{Val: 1}
+	node2 := &TreeNode{Val: 2}
+	node3 := &TreeNode{Val: 3}
+	node4 := &TreeNode{Val: 4}
+
+	root.Left = node2
+	node2.Left = node3
+	node3.Left = node4
+	fmt.Println(postorderTraversal(root))
 }

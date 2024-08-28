@@ -6,13 +6,20 @@ import (
 )
 
 func main() {
-	root := &TreeNode{Val: 1}
-	node2 := &TreeNode{Val: 2}
-	node3 := &TreeNode{Val: 3}
-	node4 := &TreeNode{Val: 4}
+	grid1 := [][]int{
+		{1, 1, 1, 0, 0},
+		{0, 1, 1, 1, 1},
+		{0, 0, 0, 0, 0},
+		{1, 0, 0, 0, 0},
+		{1, 1, 0, 1, 1},
+	}
+	grid2 := [][]int{
+		{1, 1, 1, 0, 0},
+		{0, 0, 1, 1, 1},
+		{0, 1, 0, 0, 0},
+		{1, 0, 1, 1, 0},
+		{0, 1, 0, 1, 0},
+	}
 
-	root.Left = node2
-	node2.Left = node3
-	node3.Left = node4
-	fmt.Println(postorderTraversal(root))
+	fmt.Println(countSubIslands(grid1, grid2))
 }

@@ -73,3 +73,52 @@ func notContain(arr [][2]int, x, y int) bool {
 	}
 	return true
 }
+
+/*
+*
+874. Walking Robot Simulation
+A robot on an infinite XY-plane starts at point (0, 0) facing north. The robot can receive a sequence of these three
+possible types of commands:
+
+	-2: Turn left 90 degrees.
+	-1: Turn right 90 degrees.
+	1 <= k <= 9: Move forward k units, one unit at a time.
+
+Some of the grid squares are obstacles. The ith obstacle is at grid point obstacles[i] = (xi, yi).
+If the robot runs into an obstacle, then it will instead stay in its current location and move on to the next command.
+Return the maximum Euclidean distance that the robot ever gets from the origin squared.
+*/
+func robotSim(commands []int, obstacles [][]int) int {
+	direction := [2]int{0, 1}
+	position := [2]int{0, 0}
+	maxEuclidean := 0
+
+	obstacleMap := make(map[[2]int]bool)
+	for _, obstacle := range obstacles {
+		obstacleMap[[2]int{obstacle[0], obstacle[1]}] = true
+	}
+
+	for _, command := range commands {
+		if command == -2 {
+			// Turn left: [0,1] -> [-1,0] -> [0,-1] -> [1,0] -> [0,1]
+			direction = [2]int{-direction[1], direction[0]}
+		} else if command == -1 {
+			// Turn right: [0,1] -> [1,0] -> [0,-1] -> [-1,0] -> [0,1]
+			direction = [2]int{direction[1], -direction[0]}
+		} else {
+			for step := 0; step < command; step++ {
+				nextPosition := [2]int{position[0] + direction[0], position[1] + direction[1]}
+				if obstacleMap[nextPosition] {
+					break
+				}
+				position = nextPosition // update position
+				// Update the maximum Euclidean distance squared
+				distanceSquared := position[0]*position[0] + position[1]*position[1]
+				if distanceSquared > maxEuclidean {
+					maxEuclidean = distanceSquared
+				}
+			}
+		}
+	}
+	return maxEuclidean
+}

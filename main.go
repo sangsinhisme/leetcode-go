@@ -6,9 +6,7 @@ import (
 )
 
 func main() {
-	stones := [][]int{
-		{0, 0},
-	}
-
-	fmt.Println(removeStones(stones))
+	commands := []int{4, -1, 4, -2, 4}
+	var obstacles [][]int
+	fmt.Println(robotSim(commands, obstacles))
 }

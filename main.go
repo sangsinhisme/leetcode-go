@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-	commands := []int{4, -1, 4, -2, 4}
-	var obstacles [][]int
-	fmt.Println(robotSim(commands, obstacles))
+	rolls := []int{1, 2, 3, 4}
+	fmt.Println(missingRolls(rolls, 6, 4))
 }

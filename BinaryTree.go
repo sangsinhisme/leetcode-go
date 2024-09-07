@@ -8,6 +8,11 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
 type Node struct {
 	Val      int
 	Children []*Node
@@ -36,4 +41,28 @@ func postorder(root *Node) []int {
 	var post []int
 	dfs(root, &post)
 	return post
+}
+
+func isSubPath(head *ListNode, root *TreeNode) bool {
+	var helper func(head *ListNode, root *TreeNode) bool
+	helper = func(head *ListNode, root *TreeNode) bool {
+		if root == nil {
+			return false
+		}
+		if head == nil {
+			return true
+		}
+		if root.Val == head.Val {
+			return isSubPath(head.Next, root.Left) || isSubPath(head.Next, root.Right)
+		}
+		return false
+	}
+
+	if root == nil {
+		return false
+	}
+	if helper(head, root) {
+		return true
+	}
+	return isSubPath(head, root.Left) || isSubPath(head, root.Right)
 }

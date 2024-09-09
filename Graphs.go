@@ -122,3 +122,35 @@ func robotSim(commands []int, obstacles [][]int) int {
 	}
 	return maxEuclidean
 }
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+/*
+3217. Delete Nodes From Linked List Present in Array
+You are given an array of integers nums and the head of a linked list. Return the head of the modified linked list after
+removing all nodes from the linked list that have a value that exists in nums.
+*/
+func modifiedList(nums []int, head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	numSet := make(map[int]bool)
+	for _, num := range nums {
+		numSet[num] = true
+	}
+	var helper func(*ListNode) *ListNode
+	helper = func(node *ListNode) *ListNode {
+		if node == nil {
+			return nil
+		}
+		if numSet[node.Val] {
+			return helper(node.Next)
+		}
+		node.Next = helper(node.Next)
+		return node
+	}
+	return helper(head)
+}

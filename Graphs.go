@@ -123,11 +123,6 @@ func robotSim(commands []int, obstacles [][]int) int {
 	return maxEuclidean
 }
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
-
 /*
 3217. Delete Nodes From Linked List Present in Array
 You are given an array of integers nums and the head of a linked list. Return the head of the modified linked list after

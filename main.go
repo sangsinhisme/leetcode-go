@@ -6,6 +6,11 @@ import (
 )
 
 func main() {
-	rolls := []int{1, 2, 3, 4}
-	fmt.Println(missingRolls(rolls, 6, 4))
+	// Values for the linked list
+	values := []int{3, 0, 2, 6, 8, 1, 7, 9, 4, 2, 5, 5, 0}
+
+	// Create the linked list
+	head := createLinkedList(values)
+
+	fmt.Println(spiralMatrix(3, 5, head))
 }

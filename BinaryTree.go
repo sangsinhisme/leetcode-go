@@ -109,3 +109,25 @@ func spiralMatrix(m int, n int, head *ListNode) [][]int {
 	}
 	return spiral
 }
+
+/*
+2807. Insert Greatest Common Divisors in Linked List
+Given the head of a linked list head, in which each node contains an integer value.
+Between every pair of adjacent nodes, insert a new node with a value equal to the greatest common divisor of them.
+Return the linked list after insertion.
+The greatest common divisor of two numbers is the largest positive integer that evenly divides both numbers.
+*/
+func insertGreatestCommonDivisors(head *ListNode) *ListNode {
+
+	var helper func(head *ListNode) *ListNode
+	helper = func(head *ListNode) *ListNode {
+		if head.Next == nil {
+			return head
+		}
+		gcd := gcd(head.Val, head.Next.Val)
+		head.Next = &ListNode{gcd, helper(head.Next)}
+		return head
+	}
+
+	return helper(head)
+}

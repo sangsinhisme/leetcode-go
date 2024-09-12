@@ -1,15 +1,11 @@
 package main
 
 import (
+	"fmt"
 	_ "fmt"
 )
 
 func main() {
-	// Values for the linked list
-	values := []int{18}
 
-	// Create the linked list
-	head := createLinkedList(values)
-
-	printLinkedList(insertGreatestCommonDivisors(head))
+	fmt.Print(countConsistentStrings("abc", []string{"a", "b", "c", "ab", "ac", "bc", "abc"}))
 }

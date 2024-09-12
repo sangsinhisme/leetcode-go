@@ -28,3 +28,11 @@ func printLinkedList(head *ListNode) {
 	}
 	fmt.Println("nil")
 }
+
+func string2set(s string) map[rune]struct{} {
+	set := make(map[rune]struct{})
+	for _, elem := range s {
+		set[elem] = struct{}{}
+	}
+	return set
+}

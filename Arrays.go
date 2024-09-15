@@ -31,3 +31,28 @@ func minSteps(n int) int {
 	}
 	return factors
 }
+
+func getSneakyNumbers(nums []int) []int {
+	freqMap := frequency(nums)
+	result := []int{}
+
+	// Loop through the frequency map and select numbers that have a frequency of 2
+	for num, count := range freqMap {
+		if count == 2 {
+			result = append(result, num)
+		}
+	}
+
+	return result
+}
+
+func frequency(nums []int) map[int]int {
+	freqMap := make(map[int]int)
+
+	// Loop through each number in the slice and update its frequency count
+	for _, num := range nums {
+		freqMap[num]++
+	}
+
+	return freqMap
+}

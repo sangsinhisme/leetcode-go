@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func max(a, b int) int {
 	if a > b {
 		return a
@@ -85,4 +87,39 @@ func removeLinkStones(stones [][]int, stone []int, visited map[[2]int]bool) map[
 		}
 	}
 	return visited
+}
+
+func maxScore(a []int, b []int) int {
+	n := len(b)
+
+	dp := make([][4]int, n)
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < 4; j++ {
+			dp[i][j] = -999
+		}
+	}
+
+	for i := 0; i < n; i++ {
+		dp[i][0] = a[0] * b[i]
+	}
+
+	for j := 1; j < 4; j++ {
+		bestPrev := math.MinInt32
+		for i := 0; i < n; i++ {
+			if i > 0 {
+				bestPrev = max(bestPrev, dp[i-1][j-1])
+			}
+			if bestPrev != math.MinInt32 {
+				dp[i][j] = max(dp[i][j], bestPrev+a[j]*b[i])
+			}
+		}
+	}
+
+	maxScore := math.MinInt32
+	for i := 3; i < n; i++ {
+		maxScore = max(maxScore, dp[i][3])
+	}
+
+	return maxScore
 }

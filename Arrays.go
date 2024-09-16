@@ -1,6 +1,11 @@
 package main
 
-import "math"
+import (
+	"math"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 /*
 650. 2 Keys Keyboard
@@ -55,4 +60,26 @@ func frequency(nums []int) map[int]int {
 	}
 
 	return freqMap
+}
+
+func findMinDifference(timePoints []string) int {
+	var helper func(time string) int
+	helper = func(time string) int {
+		parser := strings.Split(time, ":")
+		hour, _ := strconv.Atoi(parser[0])
+		minute, _ := strconv.Atoi(parser[1])
+		return hour*60 + minute
+	}
+	n := len(timePoints)
+
+	times := make([]int, n)
+	for i, time := range timePoints {
+		times[i] = helper(time)
+	}
+	sort.Ints(times)
+	minDiff := 1440 + times[0] - times[n-1]
+	for i := 1; i < n; i++ {
+		minDiff = min(minDiff, times[i]-times[i-1])
+	}
+	return minDiff
 }

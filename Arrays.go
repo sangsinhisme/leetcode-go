@@ -39,7 +39,7 @@ func minSteps(n int) int {
 
 func getSneakyNumbers(nums []int) []int {
 	freqMap := frequency(nums)
-	result := []int{}
+	var result []int
 
 	// Loop through the frequency map and select numbers that have a frequency of 2
 	for num, count := range freqMap {

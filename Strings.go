@@ -2,6 +2,7 @@ package main
 
 import (
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -148,4 +149,31 @@ func uncommonFromSentences(s1 string, s2 string) (res []string) {
 		}
 	}
 	return
+}
+
+/*
+179. Largest Number
+Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
+Since the result may be very large, so you need to return a string instead of an integer.
+Example 1:
+Input: nums = [10,2]
+Output: "210"
+*/
+func largestNumber(nums []int) string {
+	sort.Slice(nums, func(i, j int) bool {
+		num1 := strconv.Itoa(nums[i])
+		num2 := strconv.Itoa(nums[j])
+		concat1, _ := strconv.Atoi(num1 + num2)
+		concat2, _ := strconv.Atoi(num2 + num1)
+		return concat1 > concat2
+	})
+	output := ""
+	for _, elem := range nums {
+		output += strconv.Itoa(elem)
+	}
+	length := len(output)
+	trimmed := strings.TrimLeft(output[:length-1], "0")
+	result := trimmed + output[length-1:]
+
+	return result
 }

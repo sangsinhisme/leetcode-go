@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(findMinDifference([]string{"00:00", "23:59", "00:00"}))
+	fmt.Println(largestNumber([]int{3, 30, 34, 5, 9}))
 }

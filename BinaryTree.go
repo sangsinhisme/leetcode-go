@@ -2,6 +2,7 @@ package main
 
 import (
 	"slices"
+	"strconv"
 )
 
 type TreeNode struct {
@@ -130,4 +131,39 @@ func insertGreatestCommonDivisors(head *ListNode) *ListNode {
 	}
 
 	return helper(head)
+}
+
+/*
+241. Different Ways to Add Parentheses
+Given a string expression of numbers and operators, return all possible results from computing all the different
+possible ways to group numbers and operators. You may return the answer in any order.
+The test cases are generated such that the output values fit in a 32-bit integer and the number of different results
+does not exceed 104.
+*/
+func diffWaysToCompute(expr string) []int {
+	var result []int
+	for i := 0; i < len(expr); i++ {
+		char := expr[i]
+		if char == '+' || char == '-' || char == '*' {
+			left := diffWaysToCompute(expr[:i])
+			right := diffWaysToCompute(expr[i+1:])
+			for _, l := range left {
+				for _, r := range right {
+					switch char {
+					case '+':
+						result = append(result, l+r)
+					case '-':
+						result = append(result, l-r)
+					case '*':
+						result = append(result, l*r)
+					}
+				}
+			}
+		}
+	}
+	if len(result) == 0 {
+		num, _ := strconv.Atoi(expr)
+		result = append(result, num)
+	}
+	return result
 }

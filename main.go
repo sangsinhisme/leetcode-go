@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(largestNumber([]int{3, 30, 34, 5, 9}))
+	fmt.Println(shortestPalindrome("ababbbabbaba"))
 }

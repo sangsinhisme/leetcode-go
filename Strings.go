@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"sort"
 	"strconv"
@@ -176,4 +177,34 @@ func largestNumber(nums []int) string {
 	result := trimmed + output[length-1:]
 
 	return result
+}
+
+/*
+214. Shortest Palindrome
+You are given a string s. You can convert s to a palindrome by adding characters in front of it.
+Return the shortest palindrome you can find by performing this transformation
+*/
+func shortestPalindrome(s string) string {
+	reverse := reverse(s)
+	i := 0
+	n := len(s)
+	flag := true
+	for flag && i < n {
+		if !strings.Contains(reverse, s[:i+1]) {
+			flag = false
+		} else {
+			i++
+		}
+	}
+	flag = true
+	for flag {
+		fmt.Println(reverse[n-i:])
+		fmt.Println(s[:i+1])
+		if reverse[n-i:] == s[:i] {
+			flag = false
+		} else {
+			i--
+		}
+	}
+	return reverse[:n-i] + s
 }

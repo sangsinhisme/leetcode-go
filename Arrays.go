@@ -83,3 +83,26 @@ func findMinDifference(timePoints []string) int {
 	}
 	return minDiff
 }
+
+/*
+386. Lexicographical Numbers
+Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order.
+You must write an algorithm that runs in O(n) time and uses O(1) extra space.
+*/
+func lexicalOrder(n int) []int {
+	nums := make([]int, n)
+	for i := 1; i <= n; i++ {
+		nums[i-1] = i
+	}
+	sort.Slice(nums, func(i, j int) bool {
+		num1 := strconv.Itoa(nums[i])
+		num2 := strconv.Itoa(nums[j])
+		if num1[0] == num2[0] {
+			return num1 < num2
+		}
+		concat1, _ := strconv.Atoi(num1 + num2)
+		concat2, _ := strconv.Atoi(num2 + num1)
+		return concat1 < concat2
+	})
+	return nums
+}

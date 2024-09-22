@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(shortestPalindrome("ababbbabbaba"))
+	fmt.Println("DONE")
 }

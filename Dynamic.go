@@ -1,6 +1,9 @@
 package main
 
-import "math"
+import (
+	"math"
+	"strings"
+)
 
 func max(a, b int) int {
 	if a > b {
@@ -122,4 +125,44 @@ func maxScore(a []int, b []int) int {
 	}
 
 	return maxScore
+}
+
+func minExtraChar(s string, dictionary []string) int {
+	n := len(dictionary)
+	dp := make(map[string]map[int]bool, n)
+	minimum := len(s)
+	for i := range n {
+		replace := strings.Replace(s, dictionary[i], "", -1)
+		dp[replace] = map[int]bool{i: true}
+		if len(replace) < minimum {
+			minimum = len(replace)
+		}
+	}
+	flag := true
+	for flag {
+		flag = false
+		for key, value := range dp {
+			maxReplace := key
+			indexReplace := -1
+			for i := range dictionary {
+				if !value[i] {
+					replace := strings.Replace(key, dictionary[i], "", -1)
+					if len(replace) < len(maxReplace) {
+						maxReplace = replace
+						indexReplace = i
+					}
+				}
+			}
+			if indexReplace != -1 {
+				value[indexReplace] = true
+				dp[maxReplace] = value
+				delete(dp, key)
+				flag = true
+				if len(maxReplace) < minimum {
+					minimum = len(maxReplace)
+				}
+			}
+		}
+	}
+	return minimum
 }

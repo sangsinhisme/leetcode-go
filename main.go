@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println("DONE")
+	fmt.Println(minExtraChar("sayhelloworld", []string{"hello", "world"}))
 }

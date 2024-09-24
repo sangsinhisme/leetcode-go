@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(minExtraChar("sayhelloworld", []string{"hello", "world"}))
+	fmt.Println(longestCommonPrefix([]int{1, 10, 100}, []int{9}))
 }

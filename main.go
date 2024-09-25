@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(longestCommonPrefix([]int{1, 10, 100}, []int{9}))
+	fmt.Println(sumPrefixScores([]string{"aaaaaaa", "aaaaaaa", "aaaaaaa"}))
 }

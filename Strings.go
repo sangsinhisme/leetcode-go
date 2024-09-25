@@ -208,3 +208,71 @@ func shortestPalindrome(s string) string {
 	}
 	return reverse[:n-i] + s
 }
+
+/*
+3043. Find the Length of the Longest Common Prefix
+You are given two arrays with positive integers arr1 and arr2.
+A prefix of a positive integer is an integer formed by one or more of its digits, starting from its leftmost digit.
+Return the length of the longest common prefix among all pairs. If no common prefix exists among them, return 0.
+*/
+func longestCommonPrefix(arr1 []int, arr2 []int) int {
+	prefix1 := make(map[int]bool)
+	for _, num := range arr1 {
+		for num > 0 {
+			prefix1[num] = true
+			num = num / 10
+		}
+	}
+	maxPrefix := 0
+	for _, num := range arr2 {
+		for num > 0 {
+			if prefix1[num] {
+				length := lenLoop(num)
+				if length > maxPrefix {
+					maxPrefix = length
+				}
+				break
+			}
+			num = num / 10
+		}
+	}
+	return maxPrefix
+}
+
+func lenLoop(i int) int {
+	if i == 0 {
+		return 1
+	}
+	count := 0
+	for i != 0 {
+		i /= 10
+		count++
+	}
+	return count
+}
+
+func sumPrefixScores(words []string) []int {
+	prefixes := make(map[string][]string)
+	for _, word := range words {
+		var temp []string
+		for i := range word {
+			temp = append(temp, word[:len(word)-i])
+		}
+		prefixes[word] = temp
+	}
+	freqMap := make(map[string]int)
+	for _, value := range words {
+		for _, word := range prefixes[value] {
+			freqMap[word]++
+		}
+	}
+	var output []int
+	for _, value := range words {
+		total := 0
+		for _, word := range prefixes[value] {
+			total += freqMap[word]
+		}
+		output = append(output, total)
+	}
+	return output
+}

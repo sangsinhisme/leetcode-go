@@ -13,11 +13,7 @@ func Constructor() MyCalendar {
 	return MyCalendar{intervals: []Interval{}}
 }
 
-<<<<<<< HEAD
-func (c *MyCalendar) Book(start int, end int) bool {
-=======
 func (c *MyCalendar) BookConflict(start int, end int) bool {
->>>>>>> 1e7fb06... ajourter58(vendredi 27, septembre):731. my calendar II
 	newInterval := Interval{Start: start, End: end}
 
 	for _, existing := range c.intervals {
@@ -29,8 +25,6 @@ func (c *MyCalendar) BookConflict(start int, end int) bool {
 	c.intervals = append(c.intervals, newInterval)
 	return true
 }
-<<<<<<< HEAD
-=======
 
 func (c *MyCalendar) Book(start int, end int) bool {
 	newInterval := Interval{Start: start, End: end}
@@ -56,4 +50,3 @@ func (c *MyCalendar) Book(start int, end int) bool {
 	c.intervals = append(c.intervals, newInterval)
 	return true
 }
->>>>>>> 1e7fb06... ajourter58(vendredi 27, septembre):731. my calendar II

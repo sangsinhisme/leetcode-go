@@ -106,3 +106,8 @@ func lexicalOrder(n int) []int {
 	})
 	return nums
 }
+
+func findKthNumber(n int, k int) int {
+	arr := lexicalOrder(n)
+	return arr[k]
+}

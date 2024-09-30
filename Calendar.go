@@ -9,7 +9,7 @@ type MyCalendar struct {
 	intervals []Interval
 }
 
-func Constructor() MyCalendar {
+func ConstructorMyCalendar() MyCalendar {
 	return MyCalendar{intervals: []Interval{}}
 }
 
@@ -29,7 +29,7 @@ func (c *MyCalendar) BookConflict(start int, end int) bool {
 func (c *MyCalendar) Book(start int, end int) bool {
 	newInterval := Interval{Start: start, End: end}
 
-	conflict := Constructor()
+	conflict := ConstructorMyCalendar()
 	for _, existing := range c.intervals {
 		if !(newInterval.End <= existing.Start || newInterval.Start >= existing.End) {
 			startConflict := existing.Start

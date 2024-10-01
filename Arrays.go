@@ -111,3 +111,50 @@ func findKthNumber(n int, k int) int {
 	arr := lexicalOrder(n)
 	return arr[k]
 }
+
+/*
+1497. Check If Array Pairs Are Divisible by k
+Given an array of integers arr of even length n and an integer k.
+We want to divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k.
+Return true If you can find a way to do that or false otherwise
+*/
+func canArrange(arr []int, k int) bool {
+	frequency := make(map[int]int)
+	for _, num := range arr {
+		divisor := ((num % k) + k) % k
+		frequency[divisor]++
+	}
+	for key := range frequency {
+		left := k - key
+		if key == 0 {
+			if frequency[key]%2 != 0 {
+				return false
+			}
+		} else if frequency[key] != frequency[left] {
+			return false
+		}
+	}
+	return true
+}
+
+/*
+1331. Rank Transform of an Array
+https://leetcode.com/problems/rank-transform-of-an-array/description/
+*/
+func arrayRankTransform(arr []int) []int {
+	temp := make([]int, len(arr)) // Create a new slice with the same length as arr
+	copy(temp, arr)
+	indexes := map[int]int{}
+	sort.Ints(temp)
+	idx := 1
+	for _, num := range temp {
+		if indexes[num] == 0 {
+			indexes[num] = idx
+			idx++
+		}
+	}
+	for i, num := range arr {
+		arr[i] = indexes[num]
+	}
+	return arr
+}

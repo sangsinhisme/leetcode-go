@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 /*
 weekly-contest-416
@@ -64,54 +66,32 @@ weekly-contest-416
 Q3. Count Substrings That Can Be Rearranged to Contain a String I
 */
 func validSubstringCount(word1 string, word2 string) int64 {
-	wordDict2 := make(map[rune]int)
-	for _, r := range word2 {
-		wordDict2[r]++
+	freWord2 := make([]int, 26)
+	count := 0
+	for _, char := range word2 {
+		if freWord2[char-'a'] == 0 {
+			count++
+		}
+		freWord2[char-'a']++
 	}
-
-	len1, len2 := len(word1), len(word2)
-	validCount := int64(0)
-
-	// Function to check if the currentDict meets the requirements in wordDict2
-	isValid := func(currentDict map[rune]int) bool {
-		for r, count := range wordDict2 {
-			if currentDict[r] < count {
-				return false
+	var ans int64 = 0
+	n := len(word1)
+	j := 0
+	for i := 0; i < n; i++ {
+		k := word1[i] - 'a'
+		freWord2[k]--
+		if freWord2[k] == 0 {
+			count--
+		}
+		for count == 0 {
+			ans += int64(n - i)
+			p := word1[j] - 'a'
+			freWord2[p]++
+			if freWord2[p] == 1 {
+				count++
 			}
-		}
-		return true
-	}
-
-	// Check all possible lengths from len2 to len1
-	for length := len2; length <= len1; length++ {
-		currentDict := make(map[rune]int)
-
-		// Initialize the first window of the current length
-		for i := 0; i < length; i++ {
-			currentDict[rune(word1[i])]++
-		}
-
-		// Check if the initial window is valid
-		if isValid(currentDict) {
-			validCount++
-		}
-
-		// Slide the window
-		for start := 1; start <= len1-length; start++ {
-			// Remove the old character
-			oldChar := rune(word1[start-1])
-			currentDict[oldChar]--
-
-			// Add the new character
-			newChar := rune(word1[start+length-1])
-			currentDict[newChar]++
-
-			// Check if the current window is valid
-			if isValid(currentDict) {
-				validCount++
-			}
+			j++
 		}
 	}
-
-	return validCount
+	return ans
 }

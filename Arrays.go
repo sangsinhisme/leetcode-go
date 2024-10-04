@@ -158,3 +158,35 @@ func arrayRankTransform(arr []int) []int {
 	}
 	return arr
 }
+
+/*
+2491. Divide Players Into Teams of Equal Skill
+https://leetcode.com/problems/divide-players-into-teams-of-equal-skill/description/
+*/
+func dividePlayers(skill []int) int64 {
+	total := sum(skill)
+	n := len(skill)
+	pair := total / (n / 2)
+	freq := make(map[int]int)
+	for _, i := range skill {
+		freq[i]++
+	}
+	var ans int64 = 0
+	for key, value := range freq {
+		left := pair - key
+		if freq[left] != value {
+			return -1
+		}
+		if left == key {
+			if value%2 != 0 {
+				return -1
+			}
+			ans += int64(key * (value / 2) * left)
+		} else {
+			ans += int64(key * value * left)
+		}
+		delete(freq, key)
+		delete(freq, left)
+	}
+	return ans
+}

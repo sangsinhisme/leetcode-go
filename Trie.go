@@ -58,3 +58,30 @@ func wordBreak(s string, wordDict []string) bool {
 	}
 	return dp[n] == n
 }
+
+/*
+140. Word Break II
+https://leetcode.com/problems/word-break-ii/description/?envType=problem-list-v2&envId=trie
+*/
+func wordBreakII(s string, wordDict []string) []string {
+	n := len(s)
+
+	mapWord := make(map[string]bool, n)
+	for _, word := range wordDict {
+		mapWord[word] = true
+	}
+	founded := make(map[int][]string, n)
+	for i := 1; i <= n; i++ {
+		if mapWord[s[:i]] {
+			founded[i] = []string{s[:i]}
+		}
+		for key, value := range founded {
+			if mapWord[s[key:i]] {
+				for j := range value {
+					founded[i] = append(founded[i], value[j]+" "+s[key:i])
+				}
+			}
+		}
+	}
+	return founded[n]
+}

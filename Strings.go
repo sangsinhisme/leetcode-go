@@ -215,7 +215,7 @@ You are given two arrays with positive integers arr1 and arr2.
 A prefix of a positive integer is an integer formed by one or more of its digits, starting from its leftmost digit.
 Return the length of the longest common prefix among all pairs. If no common prefix exists among them, return 0.
 */
-func longestCommonPrefix(arr1 []int, arr2 []int) int {
+func longestCommonPrefix2(arr1 []int, arr2 []int) int {
 	prefix1 := make(map[int]bool)
 	for _, num := range arr1 {
 		for num > 0 {

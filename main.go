@@ -3,5 +3,5 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(longestPalindrome("abcb"))
+	fmt.Println(longestCommonSubsequence("abcde", "ace"))
 }

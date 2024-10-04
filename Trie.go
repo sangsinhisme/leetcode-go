@@ -25,3 +25,36 @@ func longestCommonPrefix(strs []string) string {
 	}
 	return strs[0][:idx]
 }
+
+/*
+139. Word Break
+https://leetcode.com/problems/word-break/description/?envType=problem-list-v2&envId=trie
+*/
+func wordBreak(s string, wordDict []string) bool {
+	n := len(s)
+
+	mapWord := make(map[string]bool, n)
+	for _, word := range wordDict {
+		mapWord[word] = true
+	}
+
+	dp := make([]int, n+1)
+	dp[0] = 0
+	var founded []int
+	for i := 1; i <= n; i++ {
+		if mapWord[s[:i]] {
+			dp[i] = i
+			founded = append(founded, i)
+		} else {
+			for _, idx := range founded {
+				if mapWord[s[idx:i]] {
+					dp[i] = i
+					founded = append(founded, i)
+					break
+				}
+			}
+		}
+
+	}
+	return dp[n] == n
+}

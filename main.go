@@ -3,5 +3,5 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(longestCommonPrefix([]string{""}))
+	fmt.Println(wordBreak("leetscode", []string{"leets", "code"}))
 }

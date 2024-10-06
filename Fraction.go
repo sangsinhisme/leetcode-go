@@ -43,7 +43,7 @@ func fractionAddition(expression string) string {
 	return strconv.Itoa(numerator) + "/" + strconv.Itoa(denominator)
 }
 
-func gcd(a int, b int) int {
+func gcd2(a int, b int) int {
 	if a < 0 {
 		return gcd(-a, b)
 	}

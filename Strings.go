@@ -310,3 +310,11 @@ func matches(freq1 []int, freq2 []int) bool {
 	}
 	return true
 }
+
+func minLength(s string) int {
+	for strings.Contains(s, "AB") || strings.Contains(s, "CD") {
+		s = strings.Replace(s, "AB", "", -1)
+		s = strings.Replace(s, "CD", "", -1)
+	}
+	return len(s)
+}

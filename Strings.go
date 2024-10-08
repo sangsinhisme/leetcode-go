@@ -318,3 +318,24 @@ func minLength(s string) int {
 	}
 	return len(s)
 }
+
+/*
+1963. Minimum Number of Swaps to Make the String Balanced
+https://leetcode.com/problems/minimum-number-of-swaps-to-make-the-string-balanced/
+*/
+func minSwaps(s string) int {
+	stack := Stack[rune]()
+	swap := 0
+	for _, char := range s {
+		if char == '[' {
+			stack.Push('[')
+		} else {
+			if stack.Length() > 0 {
+				stack.Pop()
+			} else {
+				swap += 1
+			}
+		}
+	}
+	return (swap + 1) / 2
+}

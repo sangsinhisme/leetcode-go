@@ -339,3 +339,23 @@ func minSwaps(s string) int {
 	}
 	return (swap + 1) / 2
 }
+
+/*
+921. Minimum Add to Make Parentheses Valid
+*/
+func minAddToMakeValid(s string) int {
+	stack := Stack[rune]()
+	missing := 0
+	for _, char := range s {
+		if char == '(' {
+			stack.Push('(')
+		} else {
+			if stack.Length() > 0 {
+				stack.Pop()
+			} else {
+				missing++
+			}
+		}
+	}
+	return missing + stack.Length()
+}

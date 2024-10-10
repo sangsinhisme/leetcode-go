@@ -190,3 +190,32 @@ func dividePlayers(skill []int) int64 {
 	}
 	return ans
 }
+
+/*
+962. Maximum Width Ramp
+https://leetcode.com/problems/maximum-width-ramp/description/
+*/
+func maxWidthRamp(nums []int) int {
+	n := len(nums)
+	indices := make([]int, n)
+	for i := 0; i < n; i++ {
+		indices[i] = i
+	}
+	sort.Slice(indices, func(i, j int) bool {
+		if nums[indices[i]] == nums[indices[j]] {
+			return indices[i] < indices[j]
+		}
+		return nums[indices[i]] < nums[indices[j]]
+	})
+
+	maxWidth := 0
+	minIndex := indices[0]
+
+	for _, i := range indices {
+		if i > minIndex {
+			maxWidth = max(maxWidth, i-minIndex)
+		}
+		minIndex = min(minIndex, i)
+	}
+	return maxWidth
+}

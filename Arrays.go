@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"math"
 	"sort"
 	"strconv"
@@ -218,4 +219,86 @@ func maxWidthRamp(nums []int) int {
 		minIndex = min(minIndex, i)
 	}
 	return maxWidth
+}
+
+/*
+2406. Divide Intervals Into Minimum Number of Groups
+https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/description/
+*/
+func minGroups(intervals [][]int) int {
+	if len(intervals) == 0 {
+		return 0
+	}
+
+	sort.Slice(intervals, func(i, j int) bool {
+		return intervals[i][0] < intervals[j][0]
+	})
+
+	minHeap := &IntHeap{}
+	heap.Init(minHeap)
+
+	for _, interval := range intervals {
+		if minHeap.Len() > 0 && (*minHeap)[0] < interval[0] {
+			heap.Pop(minHeap)
+		}
+		heap.Push(minHeap, interval[1])
+	}
+
+	return minHeap.Len()
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *IntHeap) Push(x interface{}) {
+	*h = append(*h, x.(int))
+}
+
+func (h *IntHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+/*
+632. Smallest Range Covering Elements from K Lists
+https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description
+*/
+func smallestRange(nums [][]int) []int {
+	k := len(nums)
+	indices := make([]int, k)
+	for i := range indices {
+		indices[i] = 0
+	}
+	rangeList := make([]int, 2)
+	rangeList[0], rangeList[1] = 0, math.MaxInt
+
+	for {
+		curMin, curMax := math.MaxInt, math.MinInt
+		minListIdx := 0
+		for i := range k {
+			curElem := nums[i][indices[i]]
+			if curElem < curMin {
+				curMin = curElem
+				minListIdx = i
+			}
+			if curElem > curMax {
+				curMax = curElem
+			}
+		}
+		if curMax-curMin < rangeList[1]-rangeList[0] {
+			rangeList[1] = curMax
+			rangeList[0] = curMin
+		}
+		indices[minListIdx] += 1
+		if indices[minListIdx] == len(nums[minListIdx]) {
+			break
+		}
+	}
+	return rangeList
 }

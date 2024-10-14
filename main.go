@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println(smallestRange([][]int{{4, 10, 15, 24, 26}, {0, 9, 12, 20}, {5, 18, 22, 30}}))
+	fmt.Println(maxKelements([]int{1, 10, 3, 3, 3}, 3))
 }

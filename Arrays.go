@@ -250,7 +250,7 @@ func minGroups(intervals [][]int) int {
 type IntHeap []int
 
 func (h IntHeap) Len() int           { return len(h) }
-func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] }
 func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
 
 func (h *IntHeap) Push(x interface{}) {
@@ -301,4 +301,29 @@ func smallestRange(nums [][]int) []int {
 		}
 	}
 	return rangeList
+}
+
+/*
+2530. Maximal Score After Applying K Operations
+https://leetcode.com/problems/maximal-score-after-applying-k-operations/description
+*/
+func maxKelements(nums []int, k int) int64 {
+	pq := IntHeap{}
+	heap.Init(&pq)
+
+	for _, i := range nums {
+		heap.Push(&pq, i)
+	}
+
+	total := int64(0)
+	for i := 0; i < k; i++ {
+		if pq.Len() > 0 {
+			elem := heap.Pop(&pq).(int)
+			total += int64(elem)
+			newElem := int(math.Ceil(float64(elem) / 3))
+			heap.Push(&pq, newElem)
+		}
+	}
+
+	return total
 }

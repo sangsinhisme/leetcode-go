@@ -252,11 +252,9 @@ type IntHeap []int
 func (h IntHeap) Len() int           { return len(h) }
 func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] }
 func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-
 func (h *IntHeap) Push(x interface{}) {
 	*h = append(*h, x.(int))
 }
-
 func (h *IntHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
@@ -326,4 +324,28 @@ func maxKelements(nums []int, k int) int64 {
 	}
 
 	return total
+}
+
+/*
+2938. Separate Black and White Balls
+https://leetcode.com/problems/separate-black-and-white-balls/description/
+*/
+func minimumSteps(s string) int64 {
+	n := len(s)
+	l, r := 0, n-1
+	var swap int64
+	for l < r {
+		if s[l] == '0' {
+			l++
+			continue
+		}
+		if s[r] == '1' {
+			r--
+			continue
+		}
+		swap += int64(r - l)
+		r--
+		l++
+	}
+	return swap
 }

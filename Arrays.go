@@ -349,3 +349,71 @@ func minimumSteps(s string) int64 {
 	}
 	return swap
 }
+
+/*
+1405. Longest Happy String
+https://leetcode.com/problems/longest-happy-string/description/
+*/
+
+type CharFreq struct {
+	char  byte
+	count int
+}
+
+type MaxHeap []CharFreq
+
+func (h MaxHeap) Len() int { return len(h) }
+func (h MaxHeap) Less(i, j int) bool {
+	return h[i].count > h[j].count
+}
+func (h MaxHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+func (h *MaxHeap) Push(x interface{}) {
+	*h = append(*h, x.(CharFreq))
+}
+func (h *MaxHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	item := old[n-1]
+	*h = old[0 : n-1]
+	return item
+}
+
+func longestDiverseString(a int, b int, c int) string {
+	pq := &MaxHeap{}
+	heap.Init(pq)
+	if a > 0 {
+		heap.Push(pq, CharFreq{'a', a})
+	}
+	if b > 0 {
+		heap.Push(pq, CharFreq{'b', b})
+	}
+	if c > 0 {
+		heap.Push(pq, CharFreq{'c', c})
+	}
+	var result []byte
+	for pq.Len() > 0 {
+		top := heap.Pop(pq).(CharFreq)
+		n := len(result)
+		if len(result) >= 2 && result[n-1] == top.char && result[n-2] == top.char {
+			if pq.Len() == 0 {
+				break
+			}
+			second := heap.Pop(pq).(CharFreq)
+			second.count--
+			result = append(result, second.char)
+			if second.count > 0 {
+				heap.Push(pq, second)
+			}
+			heap.Push(pq, top)
+		} else {
+			result = append(result, top.char)
+			top.count--
+			if top.count > 0 {
+				heap.Push(pq, top)
+			}
+		}
+	}
+	return string(result)
+}

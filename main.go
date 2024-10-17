@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println(minimumSteps("0011000010"))
+	fmt.Println(maximumSwap(98368))
 }

@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println(maximumSwap(98368))
+	fmt.Println(countMaxOrSubsets([]int{2, 2, 2}))
 }

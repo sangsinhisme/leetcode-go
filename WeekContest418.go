@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"sort"
-	"strconv"
 )
 
 /*
@@ -12,7 +10,7 @@ Q1. Maximum Possible Number by Binary Concatenation
 func maxGoodNumber(nums []int) int {
 	binaries := make([]string, len(nums))
 	for i, num := range nums {
-		binaries[i] = num2binary2(num)
+		binaries[i] = num2binary(num)
 	}
 
 	sort.Slice(binaries, func(i, j int) bool {
@@ -25,29 +23,6 @@ func maxGoodNumber(nums []int) int {
 	}
 	output := binaryToNum(result)
 	return output
-}
-
-func num2binary2(num int) string {
-	if num == 0 {
-		return "0"
-	}
-	if num == 1 {
-		return "1"
-	}
-	if num%2 == 1 {
-		return num2binary2(num/2) + "1"
-	}
-	return num2binary2(num/2) + "0"
-}
-
-func binaryToNum(binaryStr string) int {
-	// Convert binary string to integer
-	num, err := strconv.ParseInt(binaryStr, 2, 64)
-	if err != nil {
-		fmt.Println("Error converting binary to number:", err)
-		return 0
-	}
-	return int(num)
 }
 
 /*

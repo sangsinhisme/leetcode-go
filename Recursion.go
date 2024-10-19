@@ -67,3 +67,26 @@ func contains(memo []uint8, char uint8) bool {
 	}
 	return false
 }
+
+/*
+1545. Find Kth Bit in Nth Binary String
+https://leetcode.com/problems/find-kth-bit-in-nth-binary-string/description/
+*/
+func findKthBit(n int, k int) byte {
+	if n == 1 {
+		return '0'
+	}
+	length := 1 << n // Equivalent to 2^n
+	if k < length/2 {
+		return findKthBit(n-1, k)
+	} else if k == length/2 {
+		return '1'
+	} else {
+		firstBit := findKthBit(n-1, length-k)
+		if firstBit == '1' {
+			return '0'
+		} else {
+			return '1'
+		}
+	}
+}

@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
-	fmt.Println(countMaxOrSubsets([]int{2, 2, 2}))
+	n := 1
+	println(1 << n)
 }

@@ -359,3 +359,26 @@ func minAddToMakeValid(s string) int {
 	}
 	return missing + stack.Length()
 }
+
+/*
+1593. Split a String Into the Max Number of Unique Substrings
+https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/description/
+*/
+func maxUniqueSplit(s string) int {
+	var helper func(s string, start int, seen map[string]bool) int
+	helper = func(s string, start int, seen map[string]bool) int {
+		if start == len(s) {
+			return 0
+		}
+		maximum := 0
+		for i := start + 1; i < len(s)+1; i++ {
+			if !seen[s[start:i]] {
+				seen[s[start:i]] = true
+				maximum = max(maximum, 1+helper(s, i, seen))
+				seen[s[start:i]] = false
+			}
+		}
+		return maximum
+	}
+	return helper(s, 0, make(map[string]bool))
+}

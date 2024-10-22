@@ -2,6 +2,7 @@ package main
 
 import (
 	"slices"
+	"sort"
 	"strconv"
 )
 
@@ -19,6 +20,16 @@ type ListNode struct {
 type Node struct {
 	Val      int
 	Children []*Node
+}
+
+func insertLevelOrder(arr []int, i int, n int) *TreeNode {
+	var root *TreeNode
+	if i < n {
+		root = &TreeNode{Val: arr[i]}
+		root.Left = insertLevelOrder(arr, 2*i+1, n)  // Left child
+		root.Right = insertLevelOrder(arr, 2*i+2, n) // Right child
+	}
+	return root
 }
 
 func postorderTraversal(root *TreeNode) []int {
@@ -166,4 +177,32 @@ func diffWaysToCompute(expr string) []int {
 		result = append(result, num)
 	}
 	return result
+}
+
+/*
+2583. Kth Largest Sum in a Binary Tree
+https://leetcode.com/problems/kth-largest-sum-in-a-binary-tree/description/
+*/
+func kthLargestLevelSum(root *TreeNode, k int) int64 {
+	var memo []int64
+	var helper func(root *TreeNode, idx int)
+	helper = func(root *TreeNode, idx int) {
+		if root != nil {
+			if idx >= len(memo) {
+				memo = append(memo, int64(root.Val))
+			} else {
+				memo[idx] += int64(root.Val)
+			}
+			helper(root.Left, idx+1)
+			helper(root.Right, idx+1)
+		}
+	}
+	helper(root, 0)
+	if k > len(memo) {
+		return -1
+	}
+	sort.Slice(memo, func(i, j int) bool {
+		return memo[i] > memo[j]
+	})
+	return memo[k-1]
 }

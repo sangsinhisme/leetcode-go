@@ -82,31 +82,39 @@ func minimalProperDivisor(x int, target int) int {
 /*
 Q4. Check if DFS Strings Are Palindromes
 */
-func buildTree(parent []int) map[int][]int {
-	tree := make(map[int][]int)
-	for i, p := range parent {
-		if p != -1 {
-			tree[p] = append(tree[p], i)
+func findAnswer(parent []int, s string) []bool {
+	n := len(parent)
+	path := make(map[int][]int, n)
+	dp := make(map[int]string, n)
+	for i, elem := range parent {
+		if elem != -1 {
+			path[elem] = append(path[elem], i)
 		}
 	}
-	return tree
-}
 
-func dfs2(node int, currentStr string, s string, result []string, tree map[int][]int) {
-	currentStr += string(s[node])
-	result[node] = currentStr
-	for _, child := range tree[node] {
-		dfs2(child, currentStr, s, result, tree)
+	var helper func(i int) string
+	helper = func(i int) string {
+		if dp[i] != "" {
+			return dp[i]
+		} else {
+			if path[i] == nil {
+				dp[i] = string(s[i])
+				return dp[i]
+			} else {
+				output := ""
+				for _, elem := range path[i] {
+					output = output + helper(elem)
+				}
+				output = output + string(s[i])
+				dp[i] = output
+				return output
+			}
+		}
 	}
-}
 
-func findAnswer(parent []int, s string) []bool {
-	tree := buildTree(parent)
-	result := make([]string, len(s))
-	dfs2(0, "", s, result, tree)
-	output := make([]bool, len(result))
-	for i, elem := range result {
-		output[i] = isPalindrome(elem)
+	output := make([]bool, n)
+	for i := 0; i < n; i++ {
+		output[i] = isPalindrome(helper(i))
 	}
 	return output
 }

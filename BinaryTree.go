@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"slices"
 	"sort"
 	"strconv"
@@ -32,11 +33,66 @@ func insertLevelOrder(arr []int, i int, n int) *TreeNode {
 	return root
 }
 
+func arrayToBinaryTree(arr []int) *TreeNode {
+	if len(arr) == 0 {
+		return nil
+	}
+
+	// Check if root is null
+	if arr[0] == -1 {
+		return nil
+	}
+
+	// Create the root node
+	root := &TreeNode{Val: arr[0]}
+	queue := []*TreeNode{root}
+	index := 1
+
+	// Use a queue to insert nodes level by level
+	for index < len(arr) {
+		// Get the current node from the queue
+		current := queue[0]
+		queue = queue[1:]
+
+		// Assign the left child
+		if index < len(arr) && arr[index] != -1 {
+			current.Left = &TreeNode{Val: arr[index]}
+			queue = append(queue, current.Left)
+		}
+		index++
+
+		// Assign the right child
+		if index < len(arr) && arr[index] != -1 {
+			current.Right = &TreeNode{Val: arr[index]}
+			queue = append(queue, current.Right)
+		}
+		index++
+	}
+
+	return root
+}
+
+func inorderTraversal(root *TreeNode) {
+	if root == nil {
+		return
+	}
+	inorderTraversal(root.Left)
+	fmt.Print(root.Val, " ")
+	inorderTraversal(root.Right)
+}
+
 func postorderTraversal(root *TreeNode) []int {
 	if root == nil {
 		return nil
 	}
 	return append(slices.Concat(postorderTraversal(root.Left), postorderTraversal(root.Right)), root.Val)
+}
+
+func preorderTraversal(root *TreeNode) []int {
+	if root == nil {
+		return nil
+	}
+	return append([]int{root.Val}, append(preorderTraversal(root.Left), preorderTraversal(root.Right)...)...)
 }
 
 func dfs(node *Node, post *[]int) {
@@ -205,4 +261,38 @@ func kthLargestLevelSum(root *TreeNode, k int) int64 {
 		return memo[i] > memo[j]
 	})
 	return memo[k-1]
+}
+
+/*
+2641. Cousins in Binary Tree II
+https://leetcode.com/problems/cousins-in-binary-tree-ii/description/
+*/
+func replaceValueInTree(root *TreeNode) *TreeNode {
+	dp := make(map[int]int)
+	var helper func(root *TreeNode, level int)
+	helper = func(root *TreeNode, level int) {
+		if root != nil {
+			dp[level] += root.Val
+			helper(root.Right, level+1)
+			helper(root.Left, level+1)
+		}
+	}
+	helper(root, 0)
+	var replaceHelper func(root *TreeNode, level int, sibling int)
+	replaceHelper = func(root *TreeNode, level int, sibling int) {
+		if root != nil {
+			root.Val = dp[level] - root.Val - sibling
+			siblingLeft, siblingRight := 0, 0
+			if root.Left != nil {
+				siblingLeft = root.Left.Val
+			}
+			if root.Right != nil {
+				siblingRight = root.Right.Val
+			}
+			replaceHelper(root.Right, level+1, siblingLeft)
+			replaceHelper(root.Left, level+1, siblingRight)
+		}
+	}
+	replaceHelper(root, 0, 0)
+	return root
 }

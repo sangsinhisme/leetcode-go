@@ -1,12 +1,9 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	arr := []int{5, 8, 9, 2, 1, 3, 7, 4, 6}
-	n := len(arr)
-	root := insertLevelOrder(arr, 0, n)
-	fmt.Println(kthLargestLevelSum(root, 2))
+	root := []int{5, 4, 9, 1, 10, -1, 7}
+
+	fmt.Println(preorderTraversal(replaceValueInTree(arrayToBinaryTree(root))))
 }

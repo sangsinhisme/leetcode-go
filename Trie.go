@@ -23,7 +23,7 @@ func NewNode(char string) *NodeTrie {
 	return node
 }
 
-func Constructor() Trie {
+func ConstructorTrie() Trie {
 	root := NewNode("\000")
 	return Trie{RootNode: root}
 }
@@ -151,4 +151,62 @@ func wordBreakII(s string, wordDict []string) []string {
 		}
 	}
 	return founded[n]
+}
+
+/*
+WordDictionary
+211. Design Add and Search Words Data Structure
+https://leetcode.com/problems/design-add-and-search-words-data-structure/description
+*/
+type WordDictionary struct {
+	RootNode *NodeTrie
+}
+
+func Constructor() WordDictionary {
+	root := NewNode("\000")
+	return WordDictionary{RootNode: root}
+}
+
+func (t *WordDictionary) AddWord(word string) {
+	current := t.RootNode
+	for i := 0; i < len(word); i++ {
+		index := word[i] - 'a'
+		if current.Children[index] == nil {
+			current.Children[index] = NewNode(string(word[i]))
+		}
+		current = current.Children[index]
+	}
+	current.EndWord = true
+}
+
+func (t *WordDictionary) Search(word string) bool {
+
+	var helper func(current *NodeTrie, word string) bool
+	helper = func(current *NodeTrie, word string) bool {
+		for i := 0; i < len(word); i++ {
+			if word[i] == '.' {
+				for _, nextWord := range current.Children {
+					if nextWord != nil {
+						if helper(nextWord, word[i+1:]) {
+							return true
+						}
+					}
+				}
+				return false
+			} else {
+				index := word[i] - 'a'
+				if current == nil || current.Children[index] == nil {
+					return false
+				}
+				current = current.Children[index]
+			}
+		}
+		if current.EndWord != true {
+			return false
+		}
+		return true
+	}
+
+	return helper(t.RootNode, word)
+
 }

@@ -6,7 +6,7 @@ type CustomStack struct {
 	idx  int
 }
 
-func Constructor(maxSize int) CustomStack {
+func ConstructorStack(maxSize int) CustomStack {
 	s := make([]int, maxSize)
 	size := maxSize
 	return CustomStack{s, size, -1}

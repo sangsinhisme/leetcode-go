@@ -1,6 +1,73 @@
 package main
 
 /*
+Trie
+https://leetcode.com/problems/implement-trie-prefix-tree/description
+208. Implement Trie (Prefix Tree)
+*/
+type Trie struct {
+	RootNode *NodeTrie
+}
+
+type NodeTrie struct {
+	Char     string
+	Children [26]*NodeTrie
+	EndWord  bool
+}
+
+func NewNode(char string) *NodeTrie {
+	node := &NodeTrie{Char: char}
+	for i := 0; i < 26; i++ {
+		node.Children[i] = nil
+	}
+	return node
+}
+
+func Constructor() Trie {
+	root := NewNode("\000")
+	return Trie{RootNode: root}
+}
+
+func (t *Trie) Insert(word string) {
+	current := t.RootNode
+	for i := 0; i < len(word); i++ {
+		index := word[i] - 'a'
+		if current.Children[index] == nil {
+			current.Children[index] = NewNode(string(word[i]))
+		}
+		current = current.Children[index]
+	}
+	current.EndWord = true
+}
+
+func (t *Trie) Search(word string) bool {
+	current := t.RootNode
+	for i := 0; i < len(word); i++ {
+		index := word[i] - 'a'
+		if current == nil || current.Children[index] == nil {
+			return false
+		}
+		current = current.Children[index]
+	}
+	if current.EndWord != true {
+		return false
+	}
+	return true
+}
+
+func (t *Trie) StartsWith(prefix string) bool {
+	current := t.RootNode
+	for i := 0; i < len(prefix); i++ {
+		index := prefix[i] - 'a'
+		if current == nil || current.Children[index] == nil {
+			return false
+		}
+		current = current.Children[index]
+	}
+	return true
+}
+
+/*
 14. Longest Common Prefix
 https://leetcode.com/problems/longest-common-prefix/description
 */

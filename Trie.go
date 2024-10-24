@@ -210,3 +210,82 @@ func (t *WordDictionary) Search(word string) bool {
 	return helper(t.RootNode, word)
 
 }
+
+/*
+212. Word Search II
+https://leetcode.com/problems/word-search-ii/?envType=problem-list-v2&envId=trie
+*/
+
+func (t *Trie) SearchNotNested(word string) bool {
+	current := t.RootNode
+	visited := make(map[*NodeTrie]bool)
+	for i := 0; i < len(word); i++ {
+		index := word[i] - 'a'
+		visited[current] = true
+		if current == nil || current.Children[index] == nil {
+			return false
+		}
+		current = current.Children[index]
+		if visited[current] {
+			return false
+		}
+	}
+	return true
+}
+
+func findWords(board [][]byte, words []string) []string {
+	//trie
+	trie := ConstructorTrie()
+	mapTrie := make(map[[2]int]*NodeTrie)
+
+	m := len(board[0])
+	n := len(board)
+
+	//directions
+	directions := map[int][2]int{
+		0: {0, 1},  // Right
+		1: {1, 0},  // Down
+		2: {0, -1}, // Left
+		3: {-1, 0}, // Up
+	}
+
+	root := trie.RootNode
+	//index := charIndex - 'a'
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			charIndex := board[i][j]
+			index := charIndex - 'a'
+			position := [2]int{i, j}
+			mapTrie[position] = NewNode(string(charIndex))
+			if root.Children[index] == nil {
+				root.Children[index] = mapTrie[position]
+			}
+		}
+	}
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			position := [2]int{i, j}
+			currNode := root.Children[mapTrie[position].Char[0]-'a']
+
+			for _, dir := range directions {
+				n1, m1 := dir[0]+position[0], dir[1]+position[1]
+				if m1 > -1 && m1 < m && n1 > -1 && n1 < n && mapTrie[[2]int{n1, m1}] != nil {
+					linkNode := mapTrie[[2]int{n1, m1}]
+					currNode.Children[linkNode.Char[0]-'a'] = linkNode
+					mapTrie[position].Children[linkNode.Char[0]-'a'] = linkNode
+				}
+			}
+		}
+	}
+
+	var output []string
+	for _, word := range words {
+		if trie.SearchNotNested(word) {
+			output = append(output, word)
+		}
+	}
+
+	return output
+}

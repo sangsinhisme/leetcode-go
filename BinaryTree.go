@@ -95,13 +95,13 @@ func preorderTraversal(root *TreeNode) []int {
 	return append([]int{root.Val}, append(preorderTraversal(root.Left), preorderTraversal(root.Right)...)...)
 }
 
-func dfs(node *Node, post *[]int) {
+func dfsTree(node *Node, post *[]int) {
 	if node == nil {
 		return
 	}
 	if len(node.Children) > 0 {
 		for _, c := range node.Children {
-			dfs(c, post)
+			dfsTree(c, post)
 		}
 	}
 	*post = append(*post, node.Val)
@@ -109,7 +109,7 @@ func dfs(node *Node, post *[]int) {
 
 func postorder(root *Node) []int {
 	var post []int
-	dfs(root, &post)
+	dfsTree(root, &post)
 	return post
 }
 

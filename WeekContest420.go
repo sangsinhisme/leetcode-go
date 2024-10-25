@@ -1,5 +1,7 @@
 package main
 
+import "slices"
+
 /*
 Q1. Find the Sequence of Strings Appeared on the Screen
 */
@@ -52,10 +54,16 @@ func minOperations(nums []int) int {
 
 	operations := 0
 
+	memo := make(map[int]int)
+
 	for i := n - 2; i >= 0; i-- {
 		if divisions[i] > divisions[i+1] {
-			divisor := minimalProperDivisor(divisions[i], divisions[i+1])
-			if divisor == -1 {
+			divisor := memo[divisions[i]]
+			if divisor == 0 {
+				divisor = divisions[i] / minimalProperDivisor(divisions[i])
+				memo[divisions[i]] = divisor
+			}
+			if divisor < 0 || divisor > divisions[i+1] {
 				return -1
 			}
 			divisions[i] = divisor
@@ -66,12 +74,8 @@ func minOperations(nums []int) int {
 	return operations
 }
 
-func minimalProperDivisor(x int, target int) int {
-	if x <= 2 || target < 2 {
-		return -1
-	}
-
-	for i := target; i >= 2; i-- {
+func minimalProperDivisor(x int) int {
+	for i := x / 2; i > 1; i-- {
 		if x%i == 0 {
 			return i
 		}
@@ -82,49 +86,61 @@ func minimalProperDivisor(x int, target int) int {
 /*
 Q4. Check if DFS Strings Are Palindromes
 */
-func findAnswer(parent []int, s string) []bool {
-	n := len(parent)
-	path := make(map[int][]int, n)
-	dp := make(map[int]string, n)
-	for i, elem := range parent {
-		if elem != -1 {
-			path[elem] = append(path[elem], i)
-		}
+func findAnswer(pa []int, a string) (ans []bool) {
+	n := len(pa)
+	g := make([][]int, n)
+	for w := 1; w < n; w++ {
+		v := pa[w]
+		g[v] = append(g[v], w)
 	}
 
-	var helper func(i int) string
-	helper = func(i int) string {
-		if dp[i] != "" {
-			return dp[i]
-		} else {
-			if path[i] == nil {
-				dp[i] = string(s[i])
-				return dp[i]
-			} else {
-				output := ""
-				for _, elem := range path[i] {
-					output = output + helper(elem)
-				}
-				output = output + string(s[i])
-				dp[i] = output
-				return output
-			}
+	nodes := make([]struct{ l, r int }, len(g))
+	dfn := -1
+	var s []byte
+	var buildDFN func(int) int
+	buildDFN = func(v int) (size int) {
+		slices.Sort(g[v])
+		en := dfn + 1
+		for _, w := range g[v] {
+			sz := buildDFN(w)
+			size += sz
 		}
+		dfn++
+		nodes[v].l = en
+		nodes[v].r = nodes[v].l + size
+		size++
+		s = append(s, a[v])
+		return
+	}
+	buildDFN(0)
+
+	t := append(make([]byte, 0, len(s)*2+3), '^')
+	for _, c := range s {
+		t = append(t, '#', c)
+	}
+	t = append(t, '#', '$')
+
+	halfLen := make([]int, len(t)-2)
+	halfLen[1] = 1
+	boxM, boxR := 0, 0
+	for i := 2; i < len(halfLen); i++ {
+		hl := 1
+		if i < boxR {
+			hl = min(halfLen[boxM*2-i], boxR-i)
+		}
+		for t[i-hl] == t[i+hl] {
+			hl++
+			boxM, boxR = i, i+hl
+		}
+		halfLen[i] = hl
 	}
 
-	output := make([]bool, n)
-	for i := 0; i < n; i++ {
-		output[i] = isPalindrome(helper(i))
-	}
-	return output
-}
+	isP := func(l, r int) bool { return halfLen[l+r+2] > r-l+1 }
 
-func isPalindrome(str string) bool {
-	runes := []rune(str)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		if runes[i] != runes[j] {
-			return false
-		}
+	for _, p := range nodes {
+		res := isP(p.l, p.r)
+		ans = append(ans, res)
 	}
-	return true
+
+	return
 }

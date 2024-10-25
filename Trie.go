@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 /*
 Trie
 https://leetcode.com/problems/implement-trie-prefix-tree/description
@@ -11,13 +13,13 @@ type Trie struct {
 
 type NodeTrie struct {
 	Char     string
-	Children [26]*NodeTrie
+	Children [27]*NodeTrie
 	EndWord  bool
 }
 
 func NewNode(char string) *NodeTrie {
 	node := &NodeTrie{Char: char}
-	for i := 0; i < 26; i++ {
+	for i := 0; i < 27; i++ {
 		node.Children[i] = nil
 	}
 	return node
@@ -32,6 +34,9 @@ func (t *Trie) Insert(word string) {
 	current := t.RootNode
 	for i := 0; i < len(word); i++ {
 		index := word[i] - 'a'
+		if index == 206 {
+			index = 26
+		}
 		if current.Children[index] == nil {
 			current.Children[index] = NewNode(string(word[i]))
 		}
@@ -59,12 +64,33 @@ func (t *Trie) StartsWith(prefix string) bool {
 	current := t.RootNode
 	for i := 0; i < len(prefix); i++ {
 		index := prefix[i] - 'a'
+		if index == 206 {
+			index = 26
+		}
 		if current == nil || current.Children[index] == nil {
 			return false
 		}
 		current = current.Children[index]
 	}
 	return true
+}
+
+func (t *Trie) IsParentOfAny(subfolder string) bool {
+	current := t.RootNode
+	for i := 0; i < len(subfolder); i++ {
+		index := subfolder[i] - 'a'
+		if index == 206 {
+			index = 26
+		}
+		if current != nil && current.EndWord == true && index == 26 {
+			return true
+		}
+		if current == nil || current.Children[index] == nil {
+			return false
+		}
+		current = current.Children[index]
+	}
+	return false
 }
 
 /*
@@ -287,5 +313,24 @@ func findWords(board [][]byte, words []string) []string {
 		}
 	}
 
+	return output
+}
+
+/*
+1233. Remove Sub-Folders from the Filesystem
+https://leetcode.com/problems/remove-sub-folders-from-the-filesystem/description/
+*/
+func removeSubfolders(folder []string) []string {
+	trie := ConstructorTrie()
+	var output []string
+	sort.Slice(folder, func(i, j int) bool {
+		return len(folder[i]) < len(folder[j])
+	})
+	for _, subfolder := range folder {
+		if !trie.IsParentOfAny(subfolder) {
+			trie.Insert(subfolder)
+			output = append(output, subfolder)
+		}
+	}
 	return output
 }

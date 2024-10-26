@@ -313,3 +313,39 @@ func flipEquiv(root1 *TreeNode, root2 *TreeNode) bool {
 		return false
 	}
 }
+
+/*
+2458. Height of Binary Tree After Subtree Removal Queries
+https://leetcode.com/problems/height-of-binary-tree-after-subtree-removal-queries/description/
+*/
+func treeQueries(root *TreeNode, queries []int) []int {
+	n := len(queries)
+	ans := make([]int, n)
+	height := make(map[int]int)
+	currHeight := 0
+	var leftToRight func(node *TreeNode, level int)
+	leftToRight = func(node *TreeNode, level int) {
+		if node != nil {
+			height[node.Val] = currHeight
+			currHeight = max(currHeight, level)
+			leftToRight(node.Left, level+1)
+			leftToRight(node.Right, level+1)
+		}
+	}
+	leftToRight(root, 0)
+	currHeight = 0
+	var rightToLeft func(node *TreeNode, level int)
+	rightToLeft = func(node *TreeNode, level int) {
+		if node != nil {
+			height[node.Val] = max(height[node.Val], currHeight)
+			currHeight = max(currHeight, level)
+			rightToLeft(node.Right, level+1)
+			rightToLeft(node.Left, level+1)
+		}
+	}
+	rightToLeft(root, 0)
+	for i, elem := range queries {
+		ans[i] = height[elem]
+	}
+	return ans
+}

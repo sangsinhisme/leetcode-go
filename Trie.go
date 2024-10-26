@@ -1,6 +1,9 @@
 package main
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 /*
 Trie
@@ -333,4 +336,31 @@ func removeSubfolders(folder []string) []string {
 		}
 	}
 	return output
+}
+
+/*
+3291. Minimum Number of Valid Strings to Form Target I
+https://leetcode.com/problems/minimum-number-of-valid-strings-to-form-target-i/description
+*/
+func minValidStrings(words []string, target string) int {
+	trie := ConstructorTrie()
+	for _, word := range words {
+		trie.Insert(word)
+	}
+	dp := make([]int, len(target)+1)
+	for i := range dp {
+		dp[i] = math.MaxInt32
+	}
+	dp[0] = 0
+	for i := 1; i <= len(target); i++ {
+		for j := 0; j < i; j++ {
+			if dp[j] != math.MaxInt32 && trie.StartsWith(target[j:i]) {
+				dp[i] = min(dp[i], dp[j]+1)
+			}
+		}
+	}
+	if dp[len(target)] == math.MaxInt32 {
+		return -1
+	}
+	return dp[len(target)]
 }

@@ -3,6 +3,12 @@ package main
 import "fmt"
 
 func main() {
-	root := arrayToBinaryTree([]int{5, 8, 9, 2, 1, 3, 7, 4, 6})
-	fmt.Println(treeQueries(root, []int{3, 2, 4, 8}))
+	fmt.Println(maxMoves(
+		[][]int{
+			{19, 13, 5, 10, 30, 19, 28},
+			{17, 9, 2, 26, 9, 24, 3},
+			{1, 12, 13, 21, 18, 12, 8},
+			{17, 10, 13, 15, 19, 30, 6},
+			{14, 5, 24, 24, 17, 22, 6},
+		}))
 }

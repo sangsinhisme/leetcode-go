@@ -3,12 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(maxMoves(
-		[][]int{
-			{19, 13, 5, 10, 30, 19, 28},
-			{17, 9, 2, 26, 9, 24, 3},
-			{1, 12, 13, 21, 18, 12, 8},
-			{17, 10, 13, 15, 19, 30, 6},
-			{14, 5, 24, 24, 17, 22, 6},
-		}))
+	board := [][]byte{{'a', 'b', 'c'}, {'a', 'e', 'd'}, {'a', 'f', 'g'}}
+	words := []string{"abcdefg", "gfedcbaaa", "eaabcdgfa", "befa", "dgc", "ade"}
+	fmt.Println(findWords(board, words))
 }

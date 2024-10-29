@@ -78,6 +78,22 @@ func (t *Trie) StartsWith(prefix string) bool {
 	return true
 }
 
+func (t *Trie) StartsWithOrSearch(word string) int {
+	current := t.RootNode
+	for i := 0; i < len(word); i++ {
+		index := word[i] - 'a'
+		if current == nil || current.Children[index] == nil {
+			return 0
+		}
+		current = current.Children[index]
+	}
+	if current.EndWord != true {
+		return 1
+	}
+	current.EndWord = false
+	return 2
+}
+
 func (t *Trie) IsParentOfAny(subfolder string) bool {
 	current := t.RootNode
 	for i := 0; i < len(subfolder); i++ {
@@ -263,56 +279,61 @@ func (t *Trie) SearchNotNested(word string) bool {
 }
 
 func findWords(board [][]byte, words []string) []string {
-	//trie
+	// Initialize Trie
 	trie := ConstructorTrie()
-	mapTrie := make(map[[2]int]*NodeTrie)
-
-	m := len(board[0])
-	n := len(board)
-
-	//directions
-	directions := map[int][2]int{
-		0: {0, 1},  // Right
-		1: {1, 0},  // Down
-		2: {0, -1}, // Left
-		3: {-1, 0}, // Up
-	}
-
-	root := trie.RootNode
-	//index := charIndex - 'a'
-
-	for i := 0; i < n; i++ {
-		for j := 0; j < m; j++ {
-			charIndex := board[i][j]
-			index := charIndex - 'a'
-			position := [2]int{i, j}
-			mapTrie[position] = NewNode(string(charIndex))
-			if root.Children[index] == nil {
-				root.Children[index] = mapTrie[position]
-			}
-		}
-	}
-
-	for i := 0; i < n; i++ {
-		for j := 0; j < m; j++ {
-			position := [2]int{i, j}
-			currNode := root.Children[mapTrie[position].Char[0]-'a']
-
-			for _, dir := range directions {
-				n1, m1 := dir[0]+position[0], dir[1]+position[1]
-				if m1 > -1 && m1 < m && n1 > -1 && n1 < n && mapTrie[[2]int{n1, m1}] != nil {
-					linkNode := mapTrie[[2]int{n1, m1}]
-					currNode.Children[linkNode.Char[0]-'a'] = linkNode
-					mapTrie[position].Children[linkNode.Char[0]-'a'] = linkNode
-				}
-			}
-		}
-	}
-
-	var output []string
 	for _, word := range words {
-		if trie.SearchNotNested(word) {
+		trie.Insert(word)
+	}
+
+	n, m := len(board), len(board[0])
+	directions := [][2]int{
+		{0, 1},  // Right
+		{1, 0},  // Down
+		{0, -1}, // Left
+		{-1, 0}, // Up
+	}
+
+	outputMap := make(map[string]bool)
+	var output []string
+
+	var dfs func(i, j int, node *NodeTrie, visited [][]bool, word string)
+	dfs = func(i, j int, node *NodeTrie, visited [][]bool, word string) {
+		if node == nil || visited[i][j] {
+			return
+		}
+
+		char := board[i][j]
+		node = node.Children[char-'a']
+		if node == nil {
+			return
+		}
+
+		visited[i][j] = true
+		word += string(char)
+
+		if node.EndWord && !outputMap[word] {
+			outputMap[word] = true
 			output = append(output, word)
+		}
+
+		for _, dir := range directions {
+			nx, ny := i+dir[0], j+dir[1]
+			if nx >= 0 && ny >= 0 && nx < n && ny < m {
+				dfs(nx, ny, node, visited, word)
+			}
+		}
+
+		visited[i][j] = false
+	}
+
+	// Traverse each cell
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			visited := make([][]bool, n)
+			for k := range visited {
+				visited[k] = make([]bool, m)
+			}
+			dfs(i, j, trie.RootNode, visited, "")
 		}
 	}
 

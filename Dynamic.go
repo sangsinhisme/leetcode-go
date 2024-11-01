@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"sort"
 	"strings"
 )
 
@@ -220,4 +221,20 @@ func longestCommonSubsequence(text1 string, text2 string) int {
 		}
 	}
 	return dp[n1][n2]
+}
+
+/*
+https://leetcode.com/problems/minimum-total-distance-traveled/description/
+2463. Minimum Total Distance Traveled
+*/
+func minimumTotalDistance(robot []int, factory [][]int) int64 {
+	n := len(robot)
+	dp := make([]int, n)
+
+	sort.Ints(robot)
+	sort.Slice(factory, func(i, j int) bool {
+		return factory[i][0] < factory[j][0]
+	})
+
+	return int64(0)
 }

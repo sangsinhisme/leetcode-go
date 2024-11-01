@@ -382,3 +382,34 @@ func maxUniqueSplit(s string) int {
 	}
 	return helper(s, 0, make(map[string]bool))
 }
+
+/*
+https://leetcode.com/problems/delete-characters-to-make-fancy-string/description/
+1957. Delete Characters to Make Fancy String
+*/
+func makeFancyString(s string) string {
+	n := len(s)
+	if n < 3 {
+		return s
+	}
+
+	var builder strings.Builder
+	builder.Grow(n)
+
+	cons := 1
+	lastCons := s[0]
+
+	for i := 1; i < n; i++ {
+		if s[i] == lastCons {
+			cons++
+		} else {
+			lastCons = s[i]
+			cons = 1
+		}
+
+		if cons < 3 {
+			builder.WriteByte(s[i])
+		}
+	}
+	return builder.String()
+}

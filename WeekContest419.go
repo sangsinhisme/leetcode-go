@@ -110,22 +110,22 @@ type FreqElement struct {
 	freq int
 }
 
-type MinHeap []FreqElement
+type MinHeapFreq []FreqElement
 
-func (h MinHeap) Len() int { return len(h) }
-func (h MinHeap) Less(i, j int) bool {
+func (h MinHeapFreq) Len() int { return len(h) }
+func (h MinHeapFreq) Less(i, j int) bool {
 	if h[i].freq == h[j].freq {
 		return h[i].val < h[j].val
 	}
 	return h[i].freq < h[j].freq
 }
-func (h MinHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h MinHeapFreq) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
 
-func (h *MinHeap) Push(x interface{}) {
+func (h *MinHeapFreq) Push(x interface{}) {
 	*h = append(*h, x.(FreqElement))
 }
 
-func (h *MinHeap) Pop() interface{} {
+func (h *MinHeapFreq) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
@@ -136,7 +136,7 @@ func findXSum(nums []int, k int, x int) []int64 {
 	freq := make(map[int]int)
 	n := len(nums)
 	result := []int64{}
-	h := &MinHeap{}
+	h := &MinHeapFreq{}
 	heap.Init(h)
 
 	for i := 0; i < k; i++ {
@@ -144,7 +144,7 @@ func findXSum(nums []int, k int, x int) []int64 {
 	}
 
 	updateHeap := func() {
-		h = &MinHeap{}
+		h = &MinHeapFreq{}
 		heap.Init(h)
 		for val, count := range freq {
 			heap.Push(h, FreqElement{val, count})

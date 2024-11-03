@@ -417,3 +417,97 @@ func longestDiverseString(a int, b int, c int) string {
 	}
 	return string(result)
 }
+
+/*
+1277. Count Square Submatrices with All Ones
+https://leetcode.com/problems/count-square-submatrices-with-all-ones/
+*/
+func countSquares(matrix [][]int) int {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return 0
+	}
+
+	m := len(matrix[0])
+	n := len(matrix)
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, m)
+	}
+
+	ans := 0
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			if matrix[i][j] == 1 {
+				if i == 0 || j == 0 {
+					dp[i][j] = 1
+				} else {
+					dp[i][j] = min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1])) + 1
+				}
+				ans += dp[i][j]
+			}
+		}
+	}
+
+	return ans
+}
+
+func longestMountain(arr []int) int {
+	n := len(arr)
+	LMA := 0
+	for i := 0; i < n; i++ {
+		peak := i + 1
+		for ; peak < n; peak++ {
+			if arr[peak] <= arr[peak-1] {
+				peak--
+				break
+			}
+		}
+		if peak == i || peak == n {
+			continue
+		}
+		down := peak
+		for ; down < n-1; down++ {
+			if arr[down] <= arr[down+1] {
+				break
+			}
+		}
+		if down != peak {
+			LMA = max(LMA, down-i+1)
+		}
+		if i != down-1 {
+			i = down - 1
+		}
+	}
+	return LMA
+}
+
+func minimumMountainRemovals(nums []int) int {
+	n := len(nums)
+	LIS := make([]int, n)
+	LDS := make([]int, n)
+	for i := 0; i < n; i++ {
+		LIS[i] = 1
+		for j := 0; j < i; j++ {
+			if nums[i] > nums[j] {
+				LIS[i] = max(LIS[i], LIS[j]+1)
+			}
+		}
+	}
+
+	for i := n - 1; i > -1; i-- {
+		LDS[i] = 1
+		for j := n - 1; j > i; j-- {
+			if nums[i] > nums[j] {
+				LDS[i] = max(LDS[i], LDS[j]+1)
+			}
+		}
+	}
+
+	ans := math.MaxInt
+	for i := range n {
+		if LIS[i] > 1 && LDS[i] > 1 {
+			ans = min(ans, n-LIS[i]-LDS[i]+1)
+		}
+	}
+	return ans
+}

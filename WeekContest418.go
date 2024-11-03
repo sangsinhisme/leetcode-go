@@ -88,12 +88,12 @@ func constructGridLayout(n int, edges [][]int) [][]int {
 /*
 Q4. Sorted GCD Pair Queries
 */
-func gcd(a, b int) int {
-	for b != 0 {
-		a, b = b, a%b
-	}
-	return a
-}
+//func gcd2(a, b int) int {
+//	for b != 0 {
+//		a, b = b, a%b
+//	}
+//	return a
+//}
 
 func gcdValues(nums []int, queries []int64) []int {
 	n := len(nums)

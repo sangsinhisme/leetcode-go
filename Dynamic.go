@@ -2,7 +2,6 @@ package main
 
 import (
 	"math"
-	"sort"
 	"strings"
 )
 
@@ -93,7 +92,7 @@ func removeLinkStones(stones [][]int, stone []int, visited map[[2]int]bool) map[
 	return visited
 }
 
-func maxScore(a []int, b []int) int {
+func maxScore2(a []int, b []int) int {
 	n := len(b)
 
 	dp := make([][4]int, n)
@@ -221,20 +220,4 @@ func longestCommonSubsequence(text1 string, text2 string) int {
 		}
 	}
 	return dp[n1][n2]
-}
-
-/*
-https://leetcode.com/problems/minimum-total-distance-traveled/description/
-2463. Minimum Total Distance Traveled
-*/
-func minimumTotalDistance(robot []int, factory [][]int) int64 {
-	n := len(robot)
-	dp := make([]int, n)
-
-	sort.Ints(robot)
-	sort.Slice(factory, func(i, j int) bool {
-		return factory[i][0] < factory[j][0]
-	})
-
-	return int64(0)
 }

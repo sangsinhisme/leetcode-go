@@ -413,3 +413,26 @@ func makeFancyString(s string) string {
 	}
 	return builder.String()
 }
+
+/*
+3163. String Compression III
+https://leetcode.com/problems/string-compression-iii/description
+*/
+func compressedString(word string) string {
+	n := len(word)
+	var builder strings.Builder
+	builder.Grow(n)
+	count := 1
+	curr := word[0]
+	for i := 1; i < n; i++ {
+		if word[i] != curr {
+			builder.WriteString(strconv.Itoa(count) + string(curr))
+			count = 1
+			curr = word[i]
+		} else {
+			count++
+		}
+	}
+	builder.WriteString(strconv.Itoa(count) + string(curr))
+	return builder.String()
+}

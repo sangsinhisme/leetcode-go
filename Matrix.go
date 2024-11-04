@@ -1,5 +1,10 @@
 package main
 
+import (
+	"container/heap"
+	"math"
+)
+
 /*
 2684. Maximum Number of Moves in a Grid
 https://leetcode.com/problems/maximum-number-of-moves-in-a-grid/description/
@@ -41,4 +46,39 @@ func maxMoves(grid [][]int) int {
 		maxStep = max(maxStep, helper(i, 0))
 	}
 	return maxStep
+}
+
+/*
+778. Swim in Rising Water
+https://leetcode.com/problems/swim-in-rising-water/description/
+*/
+func swimInWater(grid [][]int) int {
+	n := len(grid)
+	m := len(grid[0])
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, m)
+		for j := range dp[i] {
+			dp[i][j] = math.MaxInt32
+		}
+	}
+	dp[0][0] = 0
+	directions := [][]int{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
+	minHeap := &MinHeapTime{{0, 0, grid[0][0]}}
+	heap.Init(minHeap)
+	for minHeap.Len() > 0 {
+		cur := heap.Pop(minHeap).(PointTime)
+		i, j, time := cur.x, cur.y, cur.time
+		for _, direct := range directions {
+			nextI, nextJ := i+direct[0], j+direct[1]
+			if nextI >= 0 && nextI < n && nextJ >= 0 && nextJ < m {
+				nextTime := max(grid[nextI][nextJ], time)
+				if nextTime < dp[nextI][nextJ] {
+					dp[nextI][nextJ] = nextTime
+					heap.Push(minHeap, PointTime{nextI, nextJ, nextTime})
+				}
+			}
+		}
+	}
+	return dp[n-1][m-1]
 }

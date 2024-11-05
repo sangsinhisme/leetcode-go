@@ -511,3 +511,28 @@ func minimumMountainRemovals(nums []int) int {
 	}
 	return ans
 }
+
+/*
+2914. Minimum Number of Changes to Make Binary String Beautiful
+https://leetcode.com/problems/minimum-number-of-changes-to-make-binary-string-beautiful/description/
+*/
+func minChanges(s string) int {
+	n := len(s)
+	freq := make([]int, n)
+	count := 0
+	for i := 0; i < n; i++ {
+		if s[i] == '0' {
+			count++
+		}
+		freq[i] = count
+	}
+	if n == 2 {
+		return min(2-freq[1], freq[1])
+	}
+	total := min(2-freq[1], freq[1])
+	for i := 3; i < n; i = i + 2 {
+		minSwapI := min(2-(freq[i]-freq[i-2]), freq[i]-freq[i-2])
+		total += minSwapI
+	}
+	return total
+}

@@ -536,3 +536,53 @@ func minChanges(s string) int {
 	}
 	return total
 }
+
+/*
+3011. Find if Array Can Be Sorted
+https://leetcode.com/problems/find-if-array-can-be-sorted/description/
+*/
+func canSortArray(nums []int) bool {
+	var num2lengthBit func(int) int
+	num2lengthBit = func(n int) int {
+		if n < 2 {
+			return 1
+		}
+		if n%2 == 1 {
+			return 1 + num2lengthBit(n/2)
+		}
+		return num2lengthBit(n / 2)
+	}
+	preGroup := num2lengthBit(nums[0])
+	maxPre := nums[0]
+	for i := 1; i < len(nums); i++ {
+		currGroup := num2lengthBit(nums[i])
+		if currGroup != preGroup {
+			minCurr := nums[i]
+			maxCurr := nums[i]
+			flagBreak := false
+			for j := i + 1; j < len(nums); j++ {
+				continueGroup := num2lengthBit(nums[j])
+				if continueGroup != currGroup {
+					if maxPre > minCurr {
+						return false
+					} else {
+						maxPre = maxCurr
+						preGroup = currGroup
+						i = j - 1
+						flagBreak = true
+						break
+					}
+				} else {
+					minCurr = min(minCurr, nums[j])
+					maxCurr = max(maxCurr, nums[j])
+				}
+			}
+			if !flagBreak {
+				return maxPre < minCurr
+			}
+		} else {
+			maxPre = max(maxPre, nums[i])
+		}
+	}
+	return true
+}

@@ -1,5 +1,10 @@
 package main
 
+import (
+	"container/heap"
+	"math"
+)
+
 /*
 1905. Count Sub Islands
 You are given two m x n binary matrices grid1 and grid2 containing only 0's (representing water) and 1's (representing land).
@@ -148,4 +153,81 @@ func modifiedList(nums []int, head *ListNode) *ListNode {
 		return node
 	}
 	return helper(head)
+}
+
+/*
+3243. Shortest Distance After Road Addition Queries I
+https://leetcode.com/problems/shortest-distance-after-road-addition-queries-i/description/
+*/
+func shortestDistanceAfterQueries(n int, queries [][]int) []int {
+	// Adjacency list to store the graph
+	graph := make([][]int, n)
+	for i := 0; i < n; i++ {
+		graph[i] = []int{}
+	}
+	// Add default edges
+	for i := 0; i < n-1; i++ {
+		graph[i] = append(graph[i], i+1)
+	}
+
+	// Dijkstra's algorithm implementation
+	dijkstra := func() int {
+		pq := &PriorityQueue{}
+		heap.Init(pq)
+		heap.Push(pq, &Item{node: 0, distance: 0})
+
+		dist := make([]int, n)
+		for i := range dist {
+			dist[i] = math.MaxInt32
+		}
+		dist[0] = 0
+
+		for pq.Len() > 0 {
+			current := heap.Pop(pq).(*Item)
+			currentNode, currentDist := current.node, current.distance
+
+			if currentNode == n-1 {
+				return currentDist
+			}
+
+			for _, neighbor := range graph[currentNode] {
+				newDist := currentDist + 1
+				if newDist < dist[neighbor] {
+					dist[neighbor] = newDist
+					heap.Push(pq, &Item{node: neighbor, distance: newDist})
+				}
+			}
+		}
+		return -1 // Return -1 if the target is unreachable
+	}
+
+	ans := make([]int, len(queries))
+	for i, query := range queries {
+		graph[query[0]] = append(graph[query[0]], query[1])
+		ans[i] = dijkstra()
+	}
+	return ans
+}
+
+type Item struct {
+	node     int
+	distance int
+}
+
+type PriorityQueue []*Item
+
+func (pq PriorityQueue) Len() int           { return len(pq) }
+func (pq PriorityQueue) Less(i, j int) bool { return pq[i].distance < pq[j].distance }
+func (pq PriorityQueue) Swap(i, j int)      { pq[i], pq[j] = pq[j], pq[i] }
+
+func (pq *PriorityQueue) Push(x interface{}) {
+	*pq = append(*pq, x.(*Item))
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	*pq = old[0 : n-1]
+	return item
 }

@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println(shortestDistanceAfterQueries(500, [][]int{{4, 7}, {2, 4}, {1, 6}, {2, 7}, {0, 2}, {2, 5}}))
+	fmt.Println(minimumObstacles([][]int{{0, 1, 0, 0, 0}, {0, 1, 0, 1, 0}, {0, 0, 0, 1, 0}}))
 }

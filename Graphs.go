@@ -2,7 +2,6 @@ package main
 
 import (
 	"container/heap"
-	"math"
 )
 
 /*
@@ -172,33 +171,33 @@ func shortestDistanceAfterQueries(n int, queries [][]int) []int {
 
 	// Dijkstra's algorithm implementation
 	dijkstra := func() int {
-		pq := &PriorityQueue{}
-		heap.Init(pq)
-		heap.Push(pq, &Item{node: 0, distance: 0})
-
-		dist := make([]int, n)
-		for i := range dist {
-			dist[i] = math.MaxInt32
-		}
-		dist[0] = 0
-
-		for pq.Len() > 0 {
-			current := heap.Pop(pq).(*Item)
-			currentNode, currentDist := current.node, current.distance
-
-			if currentNode == n-1 {
-				return currentDist
-			}
-
-			for _, neighbor := range graph[currentNode] {
-				newDist := currentDist + 1
-				if newDist < dist[neighbor] {
-					dist[neighbor] = newDist
-					heap.Push(pq, &Item{node: neighbor, distance: newDist})
-				}
-			}
-		}
-		return -1 // Return -1 if the target is unreachable
+		//pq := &PriorityQueue{}
+		//heap.Init(pq)
+		//heap.Push(pq, &Item{node: 0, distance: 0})
+		//
+		//dist := make([]int, n)
+		//for i := range dist {
+		//	dist[i] = math.MaxInt32
+		//}
+		//dist[0] = 0
+		//
+		//for pq.Len() > 0 {
+		//	current := heap.Pop(pq).(*Item)
+		//	currentNode, currentDist := current.node, current.distance
+		//
+		//	if currentNode == n-1 {
+		//		return currentDist
+		//	}
+		//
+		//	for _, neighbor := range graph[currentNode] {
+		//		newDist := currentDist + 1
+		//		if newDist < dist[neighbor] {
+		//			dist[neighbor] = newDist
+		//			heap.Push(pq, &Item{node: neighbor, distance: newDist})
+		//		}
+		//	}
+		//}
+		return -1
 	}
 
 	ans := make([]int, len(queries))
@@ -210,7 +209,7 @@ func shortestDistanceAfterQueries(n int, queries [][]int) []int {
 }
 
 type Item struct {
-	node     int
+	node     [2]int
 	distance int
 }
 
@@ -230,4 +229,52 @@ func (pq *PriorityQueue) Pop() interface{} {
 	item := old[n-1]
 	*pq = old[0 : n-1]
 	return item
+}
+
+/*
+https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/description/
+2290. Minimum Obstacle Removal to Reach Corner
+*/
+func minimumObstacles(grid [][]int) int {
+	n := len(grid)
+	m := len(grid[0])
+	direct := [][2]int{
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1},
+	}
+	// Dijkstra's algorithm implementation
+	dijkstra := func() int {
+		pq := &PriorityQueue{}
+		heap.Init(pq)
+		heap.Push(pq, &Item{node: [2]int{0, 0}, distance: 0})
+
+		visited := make([][]int, n)
+		for i := range n {
+			visited[i] = make([]int, m)
+		}
+		visited[0][0] = 1
+		for pq.Len() > 0 {
+			current := heap.Pop(pq).(*Item)
+			currentNode, currentDist := current.node, current.distance
+			if currentNode[0] == n-1 && currentNode[1] == m-1 {
+				return currentDist
+			}
+			for _, neighbor := range direct {
+				nextN := currentNode[0] + neighbor[0]
+				nextM := currentNode[1] + neighbor[1]
+				if nextN > -1 && nextN < n && nextM > -1 && nextM < m && visited[nextN][nextM] != 1 {
+					visited[nextN][nextM] = 1
+					if grid[nextN][nextM] == 1 {
+						heap.Push(pq, &Item{node: [2]int{nextN, nextM}, distance: currentDist + 1})
+					} else {
+						heap.Push(pq, &Item{node: [2]int{nextN, nextM}, distance: currentDist})
+					}
+				}
+			}
+		}
+		return -1
+	}
+	return dijkstra()
 }

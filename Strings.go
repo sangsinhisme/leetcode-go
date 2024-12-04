@@ -436,3 +436,26 @@ func compressedString(word string) string {
 	builder.WriteString(strconv.Itoa(count) + string(curr))
 	return builder.String()
 }
+
+/*
+https://leetcode.com/problems/make-string-a-subsequence-using-cyclic-increments/description/
+2825. Make String a Subsequence Using Cyclic Increments
+*/
+func canMakeSubsequence(str1 string, str2 string) bool {
+	var helper func(char uint8) uint8
+	helper = func(char uint8) uint8 {
+		return (char+1-'a')%26 + 'a'
+	}
+	i := 0
+	j := 0
+	for i < len(str1) && j < len(str1) {
+		if str1[i] == str2[j] || helper(str1[i]) == str2[j] {
+			j++
+		}
+		i++
+	}
+	if j == len(str2) {
+		return true
+	}
+	return false
+}

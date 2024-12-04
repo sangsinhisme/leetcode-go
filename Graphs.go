@@ -278,3 +278,57 @@ func minimumObstacles(grid [][]int) int {
 	}
 	return dijkstra()
 }
+
+/*
+https://leetcode.com/problems/minimum-time-to-visit-a-cell-in-a-grid/description/
+2577. Minimum Time to Visit a Cell In a Grid
+*/
+func minimumTime(grid [][]int) int {
+	n := len(grid)
+	m := len(grid[0])
+	direct := [][2]int{
+		{1, 0},
+		{0, 1},
+		{-1, 0},
+		{0, -1},
+	}
+	visited := make([][]int, n)
+	for i := range n {
+		visited[i] = make([]int, m)
+	}
+	visited[0][0] = 1
+	if grid[0][1] > 1 && grid[1][0] > 1 {
+		return -1
+	}
+	// Dijkstra's algorithm implementation
+	dijkstra := func() int {
+		pq := &PriorityQueue{}
+		heap.Init(pq)
+		heap.Push(pq, &Item{node: [2]int{0, 0}, distance: 0})
+		for pq.Len() > 0 {
+			current := heap.Pop(pq).(*Item)
+			currentNode, currentTime := current.node, current.distance
+			if currentNode[0] == n-1 && currentNode[1] == m-1 {
+				return currentTime
+			}
+			for _, neighbor := range direct {
+				nextN := currentNode[0] + neighbor[0]
+				nextM := currentNode[1] + neighbor[1]
+				if nextN > -1 && nextN < n && nextM > -1 && nextM < m && visited[nextN][nextM] != 1 {
+					if currentNode[0] == 0 && currentNode[1] == 0 && grid[nextN][nextM] != 1 && currentTime == 0 {
+						continue
+					}
+					visited[nextN][nextM] = 1
+					waited := (grid[nextN][nextM] - currentTime + 1) % 2
+					if currentTime >= grid[nextN][nextM] {
+						heap.Push(pq, &Item{node: [2]int{nextN, nextM}, distance: currentTime + 1})
+					} else {
+						heap.Push(pq, &Item{node: [2]int{nextN, nextM}, distance: grid[nextN][nextM] + waited})
+					}
+				}
+			}
+		}
+		return -1
+	}
+	return dijkstra()
+}

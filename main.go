@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println(minimumObstacles([][]int{{0, 1, 0, 0, 0}, {0, 1, 0, 1, 0}, {0, 0, 0, 1, 0}}))
+	fmt.Println(canMakeSubsequence("nbksekflejzgzhusd", "osellfjzgais"))
 }
